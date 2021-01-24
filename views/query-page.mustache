@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Query Viewer</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <h1>Simple Query List</h1>
+    <br />
+    <ul>
+      <li>
+        <form method="GET" action="/user">
+          <button type="submit" class="btn-gradient cyan">Get User Profile</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/card">
+          <button type="submit" class="btn-gradient cyan">Get User's Cards</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/service">
+          <button type="submit" class="btn-gradient cyan">View User's Service Limit</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/service/accounts">
+          <button type="submit" class="btn-gradient cyan">Get Services Accounts From Transaction</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/creditcard">
+          <button type="submit" class="btn-gradient cyan">Get Users Credit Card Info</button>
+        </form>
+      </li>
+    </ul>
+    <h1>Complex Query List</h1>
+    <br />
+    <ul>
+      <li>
+        <form method="GET" action="/user/card/balance">
+          <button type="submit" class="btn-gradient cyan">Get User's Balance</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/offer">
+          <button type="submit" class="btn-gradient cyan">Show Users Offres</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/virtual-card">
+          <button type="submit" class="btn-gradient cyan">Get Virtual Card No. Loyalty Card</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/biller">
+          <button type="submit" class="btn-gradient cyan">Get Users's Billers</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/user/ministatement">
+          <button type="submit" class="btn-gradient cyan">View Users's Mini Statement</button>
+        </form>
+      </li>
+    </ul>
+    <h1>Triggers & Functions</h1>
+    <br />
+    <ul>
+      <li>
+        <form method="GET" action="/new/user">
+          <button type="submit" class="btn-gradient cyan">Create New User</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/new/transaction/mobiletopup">
+          <button type="submit" class="btn-gradient cyan">Do Mobile Top-Up</button>
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/new/card">
+          <button type="submit" class="btn-gradient cyan">Add New Card</button>
+        </form>
+      </li>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Register New User</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Register New User</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>	CREATE FUNCTION public.generating_loyalty_points_card()</p>
+        <p>	    RETURNS trigger</p>
+        <p>	    LANGUAGE 'plpgsql'</p>
+        <p>	    COST 100</p>
+        <p>	    VOLATILE NOT LEAKPROOF </p>
+        <p>	AS $BODY$DECLARE</p>
+        <p>	last_card_no character varying;</p>
+        <p>	new_card_no integer;</p>
+        <p>	BEGIN</p>
+        <p>	   SELECT card_no into last_card_no FROM loyalty_points_cards ORDER BY card_no DESC LIMIT 1;</p>
+        <p>	   new_card_no=(CAST(last_card_no AS INTEGER))+1;</p>
+        <p>		INSERT INTO public.cards(</p>
+        <p>		card_no, card_holder_name, card_expiry_date, user_id, card_type)</p>
+        <p>		VALUES (CAST(new_card_no AS character varying), NEW.username, current_date+interval '3 year', NEW.user_id, 'LOYALTY POINTS CARD');</p>
+        <p>		INSERT INTO public.loyalty_points_cards(</p>
+        <p>		virtual_card_no, balance, exp_date, card_no)</p>
+        <p>		VALUES (CAST(new_card_no-390000 AS character varying), 0, current_date+interval '3 year', CAST(new_card_no AS character varying));</p>
+        <p>	    return NEW; </p>
+        <p>	END$BODY$;</p>
+      </h2>
+    </div>
+
+    <br />
+
+    <div class="row">
+      <form method="POST" action="/new/user">
+        <span>
+          <input
+            class="swing"
+            id="username"
+            type="text"
+            placeholder="username"
+            name="username"
+          /><label for="username">Username</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="email"
+            type="text"
+            placeholder="email"
+            name="email"
+          /><label for="email">E-mail</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="Mobile"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile No</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="moop"
+            type="text"
+            placeholder="Mobile Operator"
+            name="moop"
+          /><label for="moop">Mobile Operator</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="pin"
+            type="password"
+            placeholder="Pin"
+            name="pin"
+          /><label for="pin">Pin</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

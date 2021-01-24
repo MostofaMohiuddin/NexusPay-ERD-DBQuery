@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Do Mobile Top-Up</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Do Mobile Top-Up</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>CREATE OR REPLACE FUNCTION public.mobile_top_up( </p>
+         <p> input_user_id integer, </p>
+          input_card_no character varying, </p>
+      <p>    input_amount double precision, </p>
+      <p>    input_mobile_operator mobile_companies) </p>
+      <p>      RETURNS boolean </p>
+      <p>      LANGUAGE 'plpgsql' </p>
+      <p>      COST 100 </p>
+      <p>      VOLATILE </p>
+      <p>  AS $BODY$DECLARE </p>
+      <p>  input_card_type "card_type"; </p>
+      <p>  payee_account_no character varying; </p>
+      <p>  BEGIN </p>
+      <p>  SELECT c1.card_type into input_card_type </p>
+      <p>  FROM cards c1 </p>
+      <p>  WHERE user_id=input_user_id AND card_no=input_card_no; </p>  
+      <p>  SELECT account_no INTO payee_account_no</p>
+      <p>  FROM mobile_operator_accounts</p>
+      <p>  WHERE mobile_operator_name=input_mobile_operator; </p>
+      <p>  IF(input_amount < 10) THEN</p>
+      <p>    RAISE NOTICE 'Low Amount';</p>
+      <p>    return False;</p>
+      <p>  ELSE</p>
+      <p>    IF(input_card_type='LOYALTY POINTS CARD') THEN</p>
+      <p>      UPDATE 	loyalty_points_cards SET balance= balance-input_amount</p>
+      <p>      WHERE card_no = input_card_no;</p>
+      <p>    ELSIF(input_card_type='DBBL DEBIT CARD') THEN</p>
+      <p>      UPDATE 	dbbl_accounts SET balance= balance-input_amount</p>
+      <p>      WHERE card_no = input_card_no;</p>
+      <p>    ELSIF(input_card_type='DBBL CREDIT CARD') THEN</p>
+      <p>      UPDATE 	dbbl_credit_cards SET balance= balance-input_amount</p>
+      <p>      WHERE card_no = input_card_no;</p>
+      <p>    ELSE</p>
+      <p>      UPDATE 	rocket_accounts SET balance= balance-input_amount</p>
+      <p>      WHERE mobile_no=( </p>
+      <p>        SELECT mobile_no</p>
+      <p>        FROM rocket_cards</p>
+      <p>        where	card_no = input_card_no</p>
+      <p>      );</p>
+      <p>    END IF;</p>
+      <p>    UPDATE 	mobile_operator_accounts SET balance= balance+input_amount</p>
+      <p>    WHERE account_no = payee_account_no;</p>
+      <p>    INSERT INTO public.transactions(</p>
+      <p>    "timestamp", payers_acc, payees_acc, amount, cashback, service_no)</p>
+      <p>    VALUES ( input.values);</p>
+      <p>    RETURN TRUE;</p>
+      <p>  END IF;</p>
+      <p>  END;$BODY$;</p>
+      <p>  ALTER FUNCTION public.mobile_top_up(integer, character varying, double precision, mobile_companies)</p>
+      <p>      OWNER TO postgres;</p>
+      </h2>
+    </div>
+
+    <br />
+
+    <div class="row">
+      <form method="POST" action="/new/transaction/mobiletopup">
+        <span>
+          <input
+            class="swing"
+            id="user_id"
+            type="text"
+            placeholder="user_id"
+            name="user_id"
+          /><label for="user_id">User_id</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="card_no"
+            type="text"
+            placeholder="card_no"
+            name="card_no"
+          /><label for="card_no">Card No</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="mobileNo"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile No</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="amount"
+            type="number"
+            placeholder="Mobile"
+            name="amount"
+          /><label for="amount">Amount</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="moop"
+            type="text"
+            placeholder="Mobile Operator"
+            name="moop"
+          /><label for="moop">Mobile Operator</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <h2> {{ userInfo }} </h2>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

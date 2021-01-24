@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Get User's Balance</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Get User's Balance</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>( SELECT C.card_no AS card_no, C.card_holder_name AS card_holder_name, C.card_type AS card_type, LPC.balance AS balance</p>
+        <p>  FROM cards C, loyalty_points_cards LPC</p>
+        <p>  WHERE C.user_id = (SELECT U.user_id FROM users U WHERE mobile_no = input.mobile_no AND pin=input.pin)</p>
+        <p>    AND C.card_no = LPC.card_no )</p>
+        <p>UNION</p>
+        <p>( SELECT C.card_no AS card_no, C.card_holder_name AS card_holder_name, C.card_type AS card_type, DA.balance AS balance</p>
+        <p>  FROM cards C, dbbl_debit_cards DBC, dbbl_accounts DA</p>
+        <p>  WHERE C.user_id = (SELECT U.user_id FROM users U WHERE mobile_no = input.mobile_no AND pin=input.pin)</p>
+        <p>    AND C.card_no = DBC.card_no</p>
+        <p>    AND DBC.card_no = DA.card_no )</p>
+        <p>UNION</p>
+        <p>( SELECT C.card_no AS card_no, C.card_holder_name AS card_holder_name, C.card_type AS card_type, DCC.balance AS balance</p>
+        <p>  FROM cards C, dbbl_credit_cards DCC</p>
+        <p>  WHERE C.user_id = (SELECT U.user_id FROM users U WHERE mobile_no = input.mobile_no AND pin=input.pin)</p>
+        <p>    AND DCC.card_no = C.card_no )</p>
+        <p>UNION</p>
+        <p>( C.card_no AS card_no, C.card_holder_name AS card_holder_name, C.card_type AS card_type, RA.balance AS balance</p>
+        <p>  FROM cards C, rocket_cards RC, rocket_accounts RA</p>
+        <p>  WHERE C.user_id = (SELECT U.user_id FROM users U WHERE mobile_no = input.mobile_no AND pin=input.pin)</p>
+        <p>    AND C.card_no = RC.card_no</p>
+        <p>    AND RC.mobile_no = RA.mobile_no );</p>
+      </h2>
+    </div>
+
+    <br />
+    
+
+    <div class="row">
+      <form method="POST" action="/user/card/balance">
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="Mobile No"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="pin"
+            type="password"
+            placeholder="Pin"
+            name="pin"
+          /><label for="pin">Pin</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <td><strong>card_no</strong></td>
+            <td><strong>card_holder's_name</strong></td>
+            <td><strong>card_type</strong></td>
+            <td><strong>balance</strong></td>
+            </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          {{#userInfo}}
+          <tr>
+            <td>{{ card_no }}</td>
+            <td>{{ card_holder_name }}</td>
+            <td>{{ card_type }}</td>
+            <td>{{ balance }}</td>
+            </tr>
+          {{/userInfo}}
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

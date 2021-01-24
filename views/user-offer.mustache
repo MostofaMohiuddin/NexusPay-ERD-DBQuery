@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Show User's Offers</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Show User's Offers</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>SELECT *</p>
+        <p>FROM offers</p>
+        <p>WHERE loyalty_points_card_no = (</p>
+        <p>  SELECT card_no</p>
+        <p>  FROM cards</p>
+        <p>  WHERE user_id = (</p>
+        <p>    SELECT user_id</p>
+        <p>    FROM users</p>
+        <p>    WHERE mobile_no = input.mobile_no</p>
+        <p>      AND pin = input.pin )</p>
+        <p>  AND card_type = 'LOYALTY POINTS CARD' );</p>
+      </h2>
+    </div>
+
+    <br />
+    
+
+    <div class="row">
+      <form method="POST" action="/user/offer">
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="Mobile No"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="pin"
+            type="password"
+            placeholder="Pin"
+            name="pin"
+          /><label for="pin">Pin</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <td><strong>offer_id</strong></td>
+            <td><strong>loyalty_points_card_no</strong></td>
+            <td><strong>cashback</strong></td>
+            <td><strong>expiry_date</strong></td>
+            <td><strong>payee_bank_account_no</strong></td>
+            </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          {{#userInfo}}
+          <tr>
+            <td>{{ offer_id }}</td>
+            <td>{{ loyalty_points_card_no }}</td>
+            <td>{{ cashback }}</td>
+            <td>{{ expiry_date }}</td>
+            <td>{{ payee_bank_account_no }}</td>
+            </tr>
+          {{/userInfo}}
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

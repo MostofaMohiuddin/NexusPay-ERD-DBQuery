@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Show User's Virtual Card No</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Show User's Virtual Card No</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>SELECT C.card_no, C.card_holder_name, C.card_expiry_date, LPC.virtual_card_no</p>
+        <p>FROM cards C, loyalty_points_cards LPC</p>
+        <p>WHERE C.user_id = (</p>
+        <p>SELECT user_id</p>
+        <p>FROM users</p>
+        <p>WHERE mobile_no = input.mobile_no</p>
+        <p>  AND pin = input.pin )</p>
+        <p>AND C.card_no = LPC.card_no</p>
+        <p>AND card_type = 'LOYALTY POINTS CARD'</p>
+      </h2>
+    </div>
+
+    <br />
+    
+
+    <div class="row">
+      <form method="POST" action="/user/virtual-card">
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="Mobile No"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="pin"
+            type="password"
+            placeholder="Pin"
+            name="pin"
+          /><label for="pin">Pin</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <td><strong>card_no</strong></td>
+            <td><strong>card_holder_name</strong></td>
+            <td><strong>card_expiry_date</strong></td>
+            <td><strong>virtual_card_no</strong></td>
+            </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          {{#userInfo}}
+            <tr>
+                <td>{{ card_no }}</td>
+                <td>{{ card_holder_name }}</td>
+                <td>{{ card_expiry_date }}</td>
+                <td>{{ virtual_card_no }}</td>
+            </tr>
+          {{/userInfo}}
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

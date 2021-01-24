@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Get User's Service Limit</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Get User's Service Limit</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>SELECT *</p>
+        <p>FROM services</p>
+        <p>WHERE user_id = (SELECT user_id FROM users WHERE users.mobile_no = input.mobile_no AND users.pin = input.pin);</p>
+      </h2>
+    </div>
+
+    <br />
+    
+
+    <div class="row">
+      <form method="POST" action="/user/service">
+        <span>
+          <input
+            class="swing"
+            id="mobileNo"
+            type="text"
+            placeholder="Mobile No"
+            name="mobileNo"
+          /><label for="mobileNo">Mobile</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="pin"
+            type="password"
+            placeholder="Pin"
+            name="pin"
+          /><label for="pin">Pin</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <td><strong>service_name</strong></td>
+            <td><strong>daily_limit</strong></td>
+            <td><strong>monthly_limit</strong></td>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          {{#userInfo}}
+          <tr>
+            <td>{{ service_name }}</td>
+            <td>{{ daily_limit }}</td>
+            <td>{{ monthly_limit }}</td>
+          </tr>
+          {{/userInfo}}
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>

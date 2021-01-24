@@ -1,0 +1,21 @@
+{
+  "name": "project-nexuspay",
+  "version": "1.0.0",
+  "description": "CSE-216 Term Project: NexusPay. ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "scss": "node-sass scss/style.scss public/style.css"
+  },
+  "author": "KAIMonmoy",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "mustache-express": "^1.2.8",
+    "node-sass": "^4.11.0",
+    "pg": "^7.8.0"
+  }
+}

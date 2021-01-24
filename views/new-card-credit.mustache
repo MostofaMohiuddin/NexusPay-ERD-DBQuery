@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Add Credit Card</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <h1>Add Credit Card</h1>
+    <br />
+
+    <div class="code-container">
+      <h2>
+        <p>DECLARE</p>
+        <p>counter2 integer;</p>
+        <p>holder_name character varying;</p>
+        <p>BEGIN</p>
+        <p>SELECT count(*) into counter2</p>
+        <p>FROM dbbl_accounts</p>
+        <p>WHERE 		account_no =input_account_no</p>
+        <p>    AND	card_no = input_card_no</p>
+        <p>    AND	card_pin = input_card_pin;</p>
+        <p>IF(counter2=1) THEN</p>
+        <p>    SELECT username into holder_name</p>
+        <p>    FROM users</p>
+        <p>    WHERE user_id =input_user_id;</p>
+        <p>    </p>
+        <p>    INSERT INTO public.cards(</p>
+        <p>    card_no, card_holder_name, card_expiry_date, user_id, card_type)</p>
+        <p>    VALUES (input_card_no, holder_name, current_date+ interval '3 years', input_user_id,'DBBL DEBIT CARD' );</p>
+        <p>    </p>
+        <p>    INSERT INTO public.dbbl_debit_cards( </p>
+        <p>    card_no, dbbl_account_no)</p>
+        <p>    VALUES (input_card_no, input_account_no);</p>
+        <p>    </p>
+        <p>    return TRUE;</p>
+        <p>ELSE</p>
+        <p>    RAISE NOTICE 'WRONG INFORMATION';</p>
+        <p>    return FALSE;</p>
+        <p>END IF;</p>
+        <p>END;</p>
+      </h2>
+    </div>
+
+    <br />
+    
+
+    <div class="row">
+      <form method="POST" action="/new/card/debit">
+        <span>
+          <input
+            class="swing"
+            id="id"
+            type="text"
+            placeholder="User Id"
+            name="id"
+          /><label for="id">User Id</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="card"
+            type="password"
+            placeholder="Card No"
+            name="card"
+          /><label for="card">Card No</label>
+        </span>
+        <span>
+          <input
+            class="swing"
+            id="cvc"
+            type="password"
+            placeholder="cvc"
+            name="cvc"
+          /><label for="cvc">CVC</label>
+        </span>
+        <button type="submit" class="btn-gradient cyan">Submit</button>
+      </form>
+    </div>
+
+    <div class="tbl-header">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+          <tr>
+            <td><strong>card_no</strong></td>
+            <td><strong>card_holder_name</strong></td>
+            <td><strong>card_type</strong></td>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+          {{#userInfo}}
+            <tr>
+                <td>{{ card_no }}</td>
+                <td>{{ card_holder_name }}</td>
+                <td>{{ card_type }}</td>
+            </tr>
+          {{/userInfo}}
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="query-page-btn">
+      <form method="GET" action="/query">
+        <button type="submit" class="btn-gradient cyan">
+          Main Query List page
+        </button>
+      </form>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      $(window)
+        .on("load resize ", function() {
+          var scrollWidth =
+            $(".tbl-content").width() - $(".tbl-content table").width();
+          $(".tbl-header").css({ "padding-right": scrollWidth });
+        })
+        .resize();
+    </script>
+  </body>
+</html>
